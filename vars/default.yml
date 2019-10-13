@@ -1,0 +1,7 @@
+---
+
+keystodeploy:
+  - name: ssh-ed25519 XXX XXXX XXXX
+    sshkey: ssh-ed25519 XXXX
+  - name: ssh-ed25519 XXXX
+    sshkey: ssh-rsa XXXXXXXXXXXXXXXX

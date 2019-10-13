@@ -1,0 +1,38 @@
+---
+
+- hosts: localhost
+
+  tasks:
+
+    - name: Run a script to download the sshkeys from personio
+      script: /ansible/ansible-distribute-ssh/downloadsshkeys.sh  
+
+    - name: Wait until the string "ERFOLGREICH" is in the file /ansible/ansible-distribute-ssh/status.txt before continuing
+      wait_for:
+        path: /ansible/ansible-distribute-ssh/status.txt
+        search_regex: ERFOLGREICH
+
+    - name: Remove status file
+      file:
+        path: /ansible/ansible-distribute-ssh/status.txt
+        state: absent
+
+- hosts: server01
+
+  tasks:
+
+    - name: Deploy SSH-Keys to remote host
+      authorized_key:
+        user: root
+        key: "{{ lookup('file', 'keys.txt') }}"
+        exclusive: true
+
+- hosts: localhost
+
+  tasks:
+
+    - name: Remove keys file
+      file:
+        path: /ansible/ansible-distribute-ssh/keys.txt
+        state: absent
+
